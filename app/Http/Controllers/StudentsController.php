@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class StudentsController extends Controller
 {
+    // READ
     public function myView()
     {
         $students = Students::all();
@@ -16,6 +17,7 @@ class StudentsController extends Controller
         return view('welcome', compact('students', 'users'));
     }
 
+    // CREATE
     public function addNewStudent(Request $request)
     {
         $request->validate([
@@ -34,5 +36,30 @@ class StudentsController extends Controller
 
 
         return back()->with('success', 'Student added successfully');
+    }
+
+    // UPDATE
+    public function updateView($id)
+    {
+        $students = Students::where('id', '=', $id)->get();
+        return view('update', compact('students'));
+    }
+
+
+    public function updateME(Request $request)
+    {
+        Students::where('id', '=', $request->id)->update([
+            'name' => $request->name,
+            'age' => $request->age,
+            'gender' => $request->gender,
+        ]);
+
+        return redirect('/')->with('success', 'Student updated successfully');
+    }
+
+    public function deleteME($id)
+    {
+        Students::where('id', '=', $id)->delete();
+        return back()->with('success', 'Student deleted successfully');
     }
 }
